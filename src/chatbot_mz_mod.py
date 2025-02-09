@@ -101,7 +101,7 @@ class LlmPOCBot:
     def __init__(self, model='gpt-3.5-turbo'):
         self.model = model
         self.client = OpenAI(
-            api_key="***")
+            add_your_own_key"***")
         self.COMPLETIONS_MODEL = "gpt-3.5-turbo"
 
     def message(self, message):
