@@ -1,3 +1,4 @@
+## Mazin Nadaf 2/8/2025
 import torch
 from nltk.tokenize import word_tokenize
 from torch.nn.utils.rnn import pad_sequence
@@ -14,7 +15,7 @@ class SentimentInference:
         hidden_dim = 64
         output_dim = len(self.label_encoder.classes_)
 
-        # Initialize and load the model
+        # Initialize and load model
         self.model = SentimentLSTM(vocab_size, embed_dim, hidden_dim, output_dim)
         self.model.load_state_dict(checkpoint['model_state_dict'])
         self.model.eval()

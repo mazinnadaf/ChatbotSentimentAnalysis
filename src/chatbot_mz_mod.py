@@ -1,32 +1,15 @@
-#sentiment analysis, find a use for that intent
-import torch
-import spacy
+## Mazin Nadaf 2/8/2025
 from abc import abstractmethod, ABCMeta
 from openai import AssistantEventHandler, OpenAI
 import json
 import sqlite3
 from termcolor import colored
-from intent_model import load_trained_model,train_model
 from datetime import datetime
 import pandas as pd
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import nltk
-import nltk
 nltk.download('punkt')
 
-# Get current timestamp
-import torch
-import torch.nn as nn
-import torch.optim as optim
-from torch.utils.data import DataLoader, Dataset
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import classification_report
-from torch.nn.utils.rnn import pad_sequence
-from nltk.tokenize import word_tokenize
-#from new_intent_model import new_sentiment_analysis_with_lstm
-from intent_mdl_inference import new_sentiment_analysis_with_lstm
-from intent_mdl_inference import *
 from senty_mdl_inf_svd_mdl import *
 from sentiment_inf import SentimentInference
 
@@ -34,7 +17,6 @@ def setup_database():
     conn = sqlite3.connect('chatbot_memory.db')
     cursor = conn.cursor()
 
-    # Create tables if they don't exist
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS users (
         user_id INTEGER PRIMARY KEY,
@@ -119,7 +101,7 @@ class LlmPOCBot:
     def __init__(self, model='gpt-3.5-turbo'):
         self.model = model
         self.client = OpenAI(
-            api_key="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")
+            api_key="***")
         self.COMPLETIONS_MODEL = "gpt-3.5-turbo"
 
     def message(self, message):
@@ -130,7 +112,6 @@ class LlmPOCBot:
         full_prompt = f"User: {prompter.gen_query}\nBot:"
 
         return self.message(full_prompt)
-        #return self.message(str(prompter))
 
 conn, cursor = setup_database()
 generator = LlmPOCBot()
@@ -138,11 +119,10 @@ generator = LlmPOCBot()
 user_id = 1
 message = ""
 
-##sentiment analysis and Data labeling with "sentiment column for old chat history" for ML mode
+## Sentiment analysis and Data labeling
 
 recent_conversations = get_conversations(cursor, 1)
 nltk.download('vader_lexicon')
-#chat_history = pd.DataFrame(recent_conversations)
 chat_history = pd.DataFrame(recent_conversations)
 
 # Initialize VADER Sentiment Analyzer
@@ -162,7 +142,7 @@ chat_history["sentiment"] = chat_history["User Input"].apply(get_sentiment)
 
 print(chat_history.columns)
 
-## Call the LSTM Model on Chat history with labelled data to train and save the model
+## Call the LSTM Model on Chat history with labelled data to train and save model
 print("counts")
 print(get_counts)
 
@@ -170,7 +150,7 @@ sentiment_counts = chat_history["sentiment"].value_counts()
 print(sentiment_counts)
 train_and_save_model(chat_history)
 
-### load the saved tranied model###
+## Load the saved tranied model
 inference = SentimentInference(model_path='sentiment_model.pth')
 
 while message != 'quit':
@@ -185,16 +165,13 @@ while message != 'quit':
 
         save_conversation(cursor, user_id, message, response,current_timestamp)
         conn.commit()
-        ##### run inference on each chat message#########
-        #predict_fn = new_sentiment_analysis_with_lstm(df)
 
         # Predict sentiment for new sentences
         new_sentences = [message]
-        #predicted_labels = predict_new_sentences(new_sentences)
-        #print(predicted_labels)
+
+        ## Run inference on each chat message
         predictions = inference.predict(new_sentences)
         print(predictions)
-        ################################
 
         print(colored(response, 'blue', 'on_yellow'))
         print(colored("                                                                                                                                     ",'blue','on_white'))

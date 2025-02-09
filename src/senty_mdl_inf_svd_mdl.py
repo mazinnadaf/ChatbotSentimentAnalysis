@@ -1,3 +1,4 @@
+## Mazin Nadaf 2/8/2025
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -111,10 +112,9 @@ def train_and_save_model(df, model_path='sentiment_model.pth'):
     print("Unique classes in y_pred:", set(y_pred))
     print("Label encoder classes:", label_encoder.classes_)
 
-    # Fix: Ensure correct label set
+    # Ensure correct label set
     unique_labels = sorted(set(y_true) | set(y_pred))
     print("Adjusted unique labels for classification report:", unique_labels)
 
     # Generate classification report with correct labels
     print("Classification Report:\n", classification_report(y_true, y_pred, labels=unique_labels))
-    ##print("Classification Report:\n", classification_report(y_true, y_pred, target_names=label_encoder.classes_))
